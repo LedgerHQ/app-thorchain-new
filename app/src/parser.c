@@ -110,16 +110,17 @@ __Z_INLINE parser_error_t is_default_denom_base(const char *denom, uint8_t denom
         return parser_ok;
     }
 
-    if (strlen(COIN_DEFAULT_DENOM_BASE) != denom_len) {
-        *is_default = false;
-        return parser_ok;
-    }
-
-    if (memcmp(denom, COIN_DEFAULT_DENOM_BASE, denom_len) == 0) {
+    if ((strlen(COIN_DEFAULT_DENOM_BASE) == denom_len) && (memcmp(denom, COIN_DEFAULT_DENOM_BASE, denom_len) == 0)) {
         *is_default = true;
         return parser_ok;
     }
 
+    if ((strlen(COIN_DEFAULT_DENOM_OTHER) == denom_len) && (memcmp(denom, COIN_DEFAULT_DENOM_OTHER, denom_len) == 0)) {
+        *is_default = true;
+        return parser_ok;
+    }
+
+    *is_default = false;
     return parser_ok;
 }
 
