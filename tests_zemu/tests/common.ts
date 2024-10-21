@@ -24,6 +24,7 @@ const APP_PATH_S = Resolve('../app/output/app_s.elf')
 const APP_PATH_X = Resolve('../app/output/app_x.elf')
 const APP_PATH_SP = Resolve('../app/output/app_s2.elf')
 const APP_PATH_ST = Resolve('../app/output/app_stax.elf')
+const APP_PATH_FL = Resolve('../app/output/app_flex.elf')
 
 export const defaultOptions = {
   ...DEFAULT_START_OPTIONS,
@@ -37,6 +38,7 @@ export const DEVICE_MODELS: IDeviceModel[] = [
   { name: 'nanox', prefix: 'X', path: APP_PATH_X },
   { name: 'nanosp', prefix: 'SP', path: APP_PATH_SP },
   { name: 'stax', prefix: 'ST', path: APP_PATH_ST },
+  {name: 'flex', prefix: 'FL',  path: APP_PATH_FL},
 ]
 
 export const example_tx_str_MsgSend = {
@@ -89,4 +91,30 @@ export const example_tx_str_MsgDeposit = {
       }
   ],
   "sequence": "6"
+};
+
+export const example_tx_str_MsgDeposit_token_2 = {
+    "account_number": "588",
+    "chain_id": "thorchain",
+    "fee": {
+        "amount": [],
+        "gas": "10000000"
+    },
+    "memo": "",
+    "msgs": [
+        {
+            "type": "thorchain/MsgDeposit",
+            "value": {
+                "coins": [
+                    {
+                        "amount": "330000000",
+                        "asset": "ETH.ETH"
+                    }
+                ],
+                "memo": "SWAP:BNB.BNB:tbnb1qk2m905ypazwfau9cn0qnr4c4yxz63v9u9md20:",
+                "signer": "tthor1c648xgpter9xffhmcqvs7lzd7hxh0prgv5t5gp"
+            }
+        }
+    ],
+    "sequence": "6"
 };

@@ -110,12 +110,12 @@ __Z_INLINE parser_error_t is_default_denom_base(const char *denom, uint8_t denom
         return parser_ok;
     }
 
-    if (strlen(COIN_DEFAULT_DENOM_BASE) != denom_len) {
+    if (strlen(COIN_DEFAULT_DENOM_BASE) != denom_len && strlen(COIN_DEFAULT_DENOM_REPR_2) != denom_len) {
         *is_default = false;
         return parser_ok;
     }
 
-    if (memcmp(denom, COIN_DEFAULT_DENOM_BASE, denom_len) == 0) {
+    if (memcmp(denom, COIN_DEFAULT_DENOM_BASE, denom_len) == 0 || memcmp(denom, COIN_DEFAULT_DENOM_REPR_2, denom_len) == 0) {
         *is_default = true;
         return parser_ok;
     }
@@ -125,7 +125,7 @@ __Z_INLINE parser_error_t is_default_denom_base(const char *denom, uint8_t denom
 
 __Z_INLINE parser_error_t parser_formatAmountItem(uint16_t amountToken,
                                                   char *outVal, uint16_t outValLen,
-                                                  uint8_t pageIdx, uint8_t *pageCount) {
+                                                  uint8_t pageIdx, uint8_t *pageCount, bool *is_default) {
     *pageCount = 0;
 
     uint16_t numElements;
@@ -187,9 +187,9 @@ __Z_INLINE parser_error_t parser_formatAmountItem(uint16_t amountToken,
 
     snprintf(bufferUI, sizeof(bufferUI), "%s ", tmpAmount);
     // If denomination has been recognized format and replace
-    bool is_default =false;
-    CHECK_PARSER_ERR(is_default_denom_base(denomPtr, denomLen, &is_default))
-    if (is_default) {
+    *is_default = false;
+    CHECK_PARSER_ERR(is_default_denom_base(denomPtr, denomLen, is_default))
+    if (*is_default) {
         if (fpstr_to_str(bufferUI, sizeof(bufferUI), tmpAmount, COIN_DEFAULT_DENOM_FACTOR) != 0) {
             return parser_unexpected_error;
         }
@@ -205,12 +205,12 @@ __Z_INLINE parser_error_t parser_formatAmountItem(uint16_t amountToken,
 
 __Z_INLINE parser_error_t parser_formatAmount(uint16_t amountToken,
                                               char *outVal, uint16_t outValLen,
-                                              uint8_t pageIdx, uint8_t *pageCount) {
-    ZEMU_LOGF(200, "[formatAmount] ------- pageidx %d", pageIdx)
+                                              uint8_t pageIdx, uint8_t *pageCount, bool *is_default) {
+    ZEMU_LOGF(200, "[formatAmount] ------- pageidx %d\n", pageIdx)
 
     *pageCount = 0;
     if (parser_tx_obj.tx_json.json.tokens[amountToken].type != JSMN_ARRAY) {
-        return parser_formatAmountItem(amountToken, outVal, outValLen, pageIdx, pageCount);
+        return parser_formatAmountItem(amountToken, outVal, outValLen, pageIdx, pageCount, is_default);
     }
 
     uint8_t totalPages = 0;
@@ -227,7 +227,7 @@ __Z_INLINE parser_error_t parser_formatAmount(uint16_t amountToken,
         uint8_t subpagesCount;
 
         CHECK_PARSER_ERR(array_get_nth_element(&parser_tx_obj.tx_json.json, amountToken, i, &itemTokenIdx));
-        CHECK_PARSER_ERR(parser_formatAmountItem(itemTokenIdx, outVal, outValLen, 0, &subpagesCount));
+        CHECK_PARSER_ERR(parser_formatAmountItem(itemTokenIdx, outVal, outValLen, 0, &subpagesCount, is_default));
         totalPages += subpagesCount;
 
         ZEMU_LOGF(200, "[formatAmount] [%d] TokenIdx: %d - PageIdx: %d - Pages: %d - Total %d", i, itemTokenIdx,
@@ -256,7 +256,7 @@ __Z_INLINE parser_error_t parser_formatAmount(uint16_t amountToken,
     }
 
     uint8_t dummy;
-    return parser_formatAmountItem(showItemTokenIdx, outVal, outValLen, showPageIdx, &dummy);
+    return parser_formatAmountItem(showItemTokenIdx, outVal, outValLen, showPageIdx, &dummy, is_default);
 }
 
 __Z_INLINE parser_error_t parser_getJsonItem(uint8_t displayIdx,
@@ -287,10 +287,12 @@ __Z_INLINE parser_error_t parser_getJsonItem(uint8_t displayIdx,
     CHECK_APP_CANARY()
     snprintf(outKey, outKeyLen, "%s", tmpKey);
 
+    bool is_default = false;
+
     if (parser_isAmount(tmpKey)) {
         CHECK_PARSER_ERR(parser_formatAmount(ret_value_token_index,
                                              outVal, outValLen,
-                                             pageIdx, pageCount))
+                                             pageIdx, pageCount, &is_default))
     } else {
         CHECK_PARSER_ERR(tx_getToken(ret_value_token_index,
                                      outVal, outValLen,
@@ -300,8 +302,12 @@ __Z_INLINE parser_error_t parser_getJsonItem(uint8_t displayIdx,
 
     CHECK_PARSER_ERR(tx_display_make_friendly())
     CHECK_APP_CANARY()
-
-    snprintf(outKey, outKeyLen, "%s", tmpKey);
+    // Display "Raw Amount" for non-default tokens
+    if(memcmp(tmpKey, "Amount", 6) == 0 && is_default == false){
+        snprintf(outKey, outKeyLen, "Raw %s", tmpKey);
+    } else {
+        snprintf(outKey, outKeyLen, "%s", tmpKey);
+    }
     CHECK_APP_CANARY()
 
     return parser_ok;

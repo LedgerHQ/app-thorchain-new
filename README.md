@@ -7,9 +7,9 @@ Forked from [Cosmos App](https://github.com/LedgerHQ/app-cosmos) by Zondax
 
 ---
 
-This project contains the THORChain app for Ledger Nano S, Nano S+, X and Stax.
+This project contains the THORChain app for Ledger Nano S, Nano S+, X, Flex and Stax.
 
-- Ledger Nano S/S+/X/Stax THORChain app
+- Ledger Nano S/S+/X/Flex/Stax THORChain app
 - Specs / Documentation
 - C++ unit tests
 - Zemu tests
