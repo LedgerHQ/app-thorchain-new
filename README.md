@@ -177,3 +177,5 @@ The Makefile will build the firmware in a docker container and leave the binary 
 
 - [APDU Protocol](docs/APDUSPEC.md)
 - [Transaction format](docs/TXSPEC.md)
+
+test
