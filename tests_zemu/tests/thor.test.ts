@@ -23,6 +23,7 @@ import {
   AMINO_JSON_TX,
   example_tx_str_MsgSend,
   example_tx_str_MsgDeposit,
+  example_tx_str_MsgDeposit_token_2
 } from './common'
 
 // @ts-ignore
@@ -96,6 +97,10 @@ describe('Thor', function () {
 
   test.concurrent.each(DEVICE_MODELS)('sign msgDeposit normal', async function (m) {
     await signAndVerifyTransaction(m, 'sign_msgDeposit', example_tx_str_MsgDeposit);
+  });
+
+  test.concurrent.each(DEVICE_MODELS)('sign msgDeposit token 2', async function (m) {
+    await signAndVerifyTransaction(m, 'sign_msgDeposit_token_2', example_tx_str_MsgDeposit_token_2);
   });
 
 })
