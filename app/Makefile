@@ -27,6 +27,19 @@ include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.installer_script
 include $(BOLOS_SDK)/Makefile.defines
 include $(CURDIR)/Makefile.version
 
+# Set the default value for PRODUCTION_BUILD to 1 if not already defined
+PRODUCTION_BUILD ?= 1
+
+# Display whether this is a production build or for internal use
+ifeq ($(PRODUCTION_BUILD), 1)
+    $(info ************ PRODUCTION_BUILD  = [PRODUCTION BUILD])
+else
+    $(info ************ PRODUCTION_BUILD  = [INTERNAL USE])
+endif
+
+# Add the PRODUCTION_BUILD definition to the compiler flags
+DEFINES += PRODUCTION_BUILD=$(PRODUCTION_BUILD)
+
 $(info ************ TARGET_NAME  = [$(TARGET_NAME)])
 
 include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.app_testing
@@ -55,6 +68,13 @@ APP_LOAD_PARAMS = --curve secp256k1 $(COMMON_LOAD_PARAMS) --path $(APPPATH)
 ENABLE_PENDING_REVIEW_SCREEN ?= 1
 
 include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.devices
+
+ifeq ($(TARGET_NAME),TARGET_NANOS)
+	APP_STACK_MIN_SIZE := 1600
+else ifeq ($(TARGET_NAME),TARGET_NANOX)
+# the previous value (5000) was too high and caused the app to crash, i reduced it until it worked
+	APP_STACK_MIN_SIZE :=  1730
+endif
 
 $(info TARGET_NAME  = [$(TARGET_NAME)])
 $(info ICONNAME  = [$(ICONNAME)])

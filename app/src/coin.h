@@ -57,6 +57,7 @@ typedef enum {
 
 #define COIN_DEFAULT_DENOM_BASE             "rune"
 #define COIN_DEFAULT_DENOM_REPR             "RUNE"
+#define COIN_DEFAULT_DENOM_REPR_2           "THOR.RUNE"
 #define COIN_DEFAULT_DENOM_FACTOR           8u
 #define COIN_DEFAULT_DENOM_TRIMMING         0u
 
