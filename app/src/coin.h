@@ -53,8 +53,6 @@ typedef enum {
 #define APPVERSION_LINE1                   "Version:"
 #define APPVERSION_LINE2                   ("v" APPVERSION)
 
-#define COIN_DEFAULT_CHAINID                "thorchain"
-
 #define COIN_DEFAULT_DENOM_BASE             "rune"
 #define COIN_DEFAULT_DENOM_REPR             "RUNE"
 #define COIN_DEFAULT_DENOM_REPR_2           "THOR.RUNE"
@@ -79,6 +77,13 @@ typedef enum {
 #define INS_GET_VERSION                 0x00
 #define INS_SIGN_SECP256K1              0x02u
 #define INS_GET_ADDR_SECP256K1          0x04u
+
+#define SUPPORTED_CHAIN_COUNT 3
+static const char* const SUPPORTED_CHAIN_IDS[SUPPORTED_CHAIN_COUNT] = {
+    "thorchain",
+    "thorchain-1",
+    "thorchain-stagenet-2"
+};
 
 #ifdef __cplusplus
 }

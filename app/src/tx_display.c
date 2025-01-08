@@ -123,19 +123,21 @@ __Z_INLINE parser_error_t calculate_is_default_chainid() {
             0, &pageCount))
 
     zemu_log_stack(outVal);
-    zemu_log_stack(COIN_DEFAULT_CHAINID);
 
-    if (strcmp(outVal, COIN_DEFAULT_CHAINID) == 0) {
-        // If we don't match the default chainid, switch to expert mode
-        display_cache.is_default_chain = true;
-        zemu_log_stack("DEFAULT Chain ");
-    } else if ((outVal[0] == 0x30 || outVal[0] == 0x31) && strlen(outVal) == 1) {
+    // Check if chain ID matches any of the supported ones
+    for (uint8_t i = 0; i < SUPPORTED_CHAIN_COUNT; i++) {
+        if (strcmp(outVal, SUPPORTED_CHAIN_IDS[i]) == 0) {
+            display_cache.is_default_chain = true;
+            zemu_log_stack("Supported Chain");
+            return parser_ok;
+        }
+    }
+    if ((outVal[0] == 0x30 || outVal[0] == 0x31) && strlen(outVal) == 1) {
         zemu_log_stack("Not Allowed chain");
         return parser_unexpected_chain;
-    } else {
-        zemu_log_stack("Chain is NOT DEFAULT");
     }
 
+    zemu_log_stack("Chain is NOT supported");
     return parser_ok;
 }
 
