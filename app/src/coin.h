@@ -19,6 +19,7 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
 #define CLA                  0x55u
 
 #define HDPATH_LEN_DEFAULT   5
@@ -79,11 +80,8 @@ typedef enum {
 #define INS_GET_ADDR_SECP256K1          0x04u
 
 #define SUPPORTED_CHAIN_COUNT 3
-static const char* const SUPPORTED_CHAIN_IDS[SUPPORTED_CHAIN_COUNT] = {
-    "thorchain",
-    "thorchain-1",
-    "thorchain-stagenet-2"
-};
+
+const char* get_supported_chain(uint8_t index);
 
 #ifdef __cplusplus
 }

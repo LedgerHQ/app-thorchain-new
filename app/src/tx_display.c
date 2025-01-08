@@ -126,7 +126,11 @@ __Z_INLINE parser_error_t calculate_is_default_chainid() {
 
     // Check if chain ID matches any of the supported ones
     for (uint8_t i = 0; i < SUPPORTED_CHAIN_COUNT; i++) {
-        if (strcmp(outVal, SUPPORTED_CHAIN_IDS[i]) == 0) {
+        const char* supported_chain = get_supported_chain(i);
+        if (supported_chain == NULL) {
+            return parser_unexpected_value;
+        }
+        if (strcmp(outVal, supported_chain) == 0) {
             display_cache.is_default_chain = true;
             zemu_log_stack("Supported Chain");
             return parser_ok;
