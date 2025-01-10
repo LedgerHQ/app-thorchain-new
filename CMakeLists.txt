@@ -122,6 +122,7 @@ file(GLOB_RECURSE LIB_SRC
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/tx_parser.c
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/tx_display.c
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/tx_validate.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/coin.c
         ${CMAKE_CURRENT_SOURCE_DIR}/deps/tinykeccak/keccak-tiny.c
         )
 
