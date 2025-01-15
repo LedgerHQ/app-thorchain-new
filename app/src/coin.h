@@ -19,6 +19,7 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
 #define CLA                  0x55u
 
 #define HDPATH_LEN_DEFAULT   5
@@ -53,8 +54,6 @@ typedef enum {
 #define APPVERSION_LINE1                   "Version:"
 #define APPVERSION_LINE2                   ("v" APPVERSION)
 
-#define COIN_DEFAULT_CHAINID                "thorchain"
-
 #define COIN_DEFAULT_DENOM_BASE             "rune"
 #define COIN_DEFAULT_DENOM_REPR             "RUNE"
 #define COIN_DEFAULT_DENOM_REPR_2           "THOR.RUNE"
@@ -79,6 +78,10 @@ typedef enum {
 #define INS_GET_VERSION                 0x00
 #define INS_SIGN_SECP256K1              0x02u
 #define INS_GET_ADDR_SECP256K1          0x04u
+
+#define SUPPORTED_CHAIN_COUNT 3
+
+const char* get_supported_chain(uint8_t index);
 
 #ifdef __cplusplus
 }
