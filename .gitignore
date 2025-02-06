@@ -66,6 +66,8 @@ CMakeFiles/
 CMakeCache.txt
 unittests
 *.cmake
+!\cmake/Hunter/config.cmake
+!\cmake/HunterGate.cmake
 Testing/
 cmake-build-fuzz/
 

@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@blooo/ledger-thorchain-js": "^1.0.1",
-    "@zondax/zemu": "^0.46.0"
+    "@zondax/zemu": "^0.50.2"
   },
   "devDependencies": {
     "@types/jest": "^29.5.11",
